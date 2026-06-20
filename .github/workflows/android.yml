@@ -14,17 +14,23 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
+          distribution: 'temurin'
           java-version: '17'
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.10' # Plus stable pour les outils de build actuels
+
       - name: Install system dependencies
         run: |
-            sudo apt update
-            sudo apt install -y \
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            ccache \
+            uuid-dev \
+            libffi-dev \
+            libssl-dev \
             autoconf \
             automake \
             libtool \
@@ -32,20 +38,33 @@ jobs:
             zlib1g-dev \
             libncurses5-dev \
             libncursesw5-dev \
+            libgdbm-dev \
+            libsqlite3-dev \
+            libbz2-dev \
+            libreadline-dev \
+            gawk \
+            python3-pip \
+            openjdk-17-jdk \
             cmake \
-            git
+            git \
+            zip \
+            unzip
 
-      - name: Install Buildozer
+      - name: Install Buildozer and Cython (Correct Version)
         run: |
           python -m pip install --upgrade pip
-          pip install buildozer cython
+          # Force l'utilisation d'une version de Cython compatible avec Kivy 2.3.0
+          pip install "cython<3.0.0" buildozer
 
-      - name: Build APK
+      - name: Build APK with Buildozer
         run: |
-          buildozer android debug
+          # Regénère ou accepte les licences automatiquement et build en mode debug
+          yes | buildozer android debug
 
-      - name: Upload APK
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: apk
-          path: bin/*.apk
+          name: apk-release
+          path: .buildozer/android/platform/build-android-arm64-v8a/dists/testkivy/build/outputs/apk/debug/*.apk
+          # Ou plus simple si le dossier bin est créé :
+          # path: bin/*.apk
