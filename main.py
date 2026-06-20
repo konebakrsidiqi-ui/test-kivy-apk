@@ -3,6 +3,12 @@ from kivy.uix.label import Label
 
 class TestApp(App):
     def build(self):
-        return Label(text="Bonjour Mali !")
+        # Crée un label simple centré à l'écran
+        return Label(
+            text="Bonjour Mali !",
+            font_size="24sp",
+            color=(1, 1, 1, 1)  # Texte en blanc
+        )
 
-TestApp().run()
+if __name__ == "__main__":
+    TestApp().run()
