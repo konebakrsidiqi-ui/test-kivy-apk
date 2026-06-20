@@ -1,11 +1,12 @@
 [app]
 
 title = Test Kivy
+
 package.name = testkivy
 package.domain = org.test
 
 source.dir = .
-source.include_exts = py
+source.include_exts = py,png,jpg,kv
 
 version = 0.1
 
@@ -25,4 +26,5 @@ android.archs = arm64-v8a
 [buildozer]
 
 log_level = 2
+
 warn_on_root = 0
